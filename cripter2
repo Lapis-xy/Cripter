@@ -1,0 +1,318 @@
+#include <iostream>
+#include <string>
+#include <time.h>
+#include <limits>
+#include <cstdlib>
+using namespace std;
+
+
+int main() {
+    char c;
+    char choice1;
+    int loop,choice2;
+    int key;
+
+    int counter1 = 0, counter2= 0;
+    string text;
+    // cesar system
+    string upper_alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    string lower_alphabet = "abcdefghijklmnopqrstuvwxyz";
+    string key1(upper_alphabet.length(), ' ');
+    // Substitution Cipher system
+
+    string map = "5@k3#L&A(p0l8;:'[{]}~>?/<,.ABCDEFGHIJKLMNOPQRSTUVWXYZzabcdefghijmnouvytrsfdxe!^$%w-u+t_i9o76412 ";
+    string map1(map.length(), ' ');
+
+
+    srand(time(0));
+
+
+
+
+    while(loop != 3) {
+
+        cout << "1. Encrypt \n2. Decrypt \n3. Exit\n";
+        cin >> loop;
+
+        if(loop == 3)
+            break;
+
+
+        cout << "1. Caesar Cipher \n2. Substitution Cipher \n3.\n";
+        cin >> choice2;
+
+
+
+
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+
+        cout << "Please enter a text: ";
+        getline(cin, text);
+
+        string encoded(text.length(), ' ');
+        if (loop == 1) {
+            if(choice2 == 1) {
+                cout << "Do you want a random shift (Y/N) ";
+                cin >> choice1;
+
+                if(choice1 == 'Y' || choice1 == 'y') {
+                    key = rand()%(26)+1;
+                }
+                else {
+                    cout << "Please enter a shift: ";
+                    cin >> key;
+                }
+
+
+
+                // cesar cipher system
+
+                for(int i = 0; i < text.length(); i++) {
+                    c = text[i];
+                    if(isupper(c)) {
+                        encoded[i] = upper_alphabet[((c - 'A') + key)%26] ;
+                    }
+                    else if(islower(c)) {
+                        encoded[i] = lower_alphabet[((c - 'a') + key)%26] ;
+
+
+                    }
+                    else {
+                        encoded[i] = c;
+                    }
+
+                }
+                cout << "--------------------" << endl;
+
+
+                cout << "Encoded text: " << encoded << endl;
+                cout << "shift: " << key << endl;
+            }
+            // Substitution Cipher system
+
+            else if(choice2 == 2) {
+                cout << "Do you want a random shift (Y/N) ";
+                cin >> choice1;
+
+                if(choice1 == 'Y' || choice1 == 'y') {
+                    key = rand()%(32670-3700+1)+3700;
+
+                }
+                else {
+                    cout << "Please enter a shift: ";
+                    cin >> key;
+                }
+                // map generation
+                for(int i = 0; i < map.length(); i++) {
+                    map1[i] = map[(map[i] + key) % map.length()];
+                }
+
+                for(int i = 0; i < text.length(); i++) {
+                    for(int j = 0; j < map1.length(); j++) {
+                        if(map[j] == text[i]) {
+                            encoded[i] = map1[j];
+
+
+                        }
+
+
+                    }
+                }
+                cout << "--------------------" << endl;
+                cout << "Encoded text: " << encoded << endl;
+                cout << "shift: " << key << endl;
+            }
+            // VigenÃ¨re  Cipher
+
+
+            else if(choice2 == 3) {
+                cout << "Do you want a random shift (Y/N) ";
+                cin >> choice1;
+                // key generation
+                if(choice1 == 'Y' || choice1 == 'y') {
+                    for(int i = 0; i < text.length(); i++) {
+                        counter1 = rand()%upper_alphabet.length();
+                        key1[i] = upper_alphabet[counter1];
+
+                    }
+                }
+                else {
+                    cout << "Please enter a shift: ";
+                    cin >> key;
+                }
+                //crypting
+                for(int i = 0; i < text.length(); i++) {
+                    c = text[i];
+                    if(isupper(c)){
+                        for (int j = 0; j < upper_alphabet.length(); j++) {
+                            if(text[i] == upper_alphabet[j]) {
+                                counter1 = j;
+
+                            }
+
+
+                        }
+
+
+                    }
+                    else if(islower(c)) {
+                        for (int j = 0; j < lower_alphabet.length(); j++) {
+                            if(text[i] == lower_alphabet[j]) {
+                                counter1 = j;
+
+                            }
+                        }
+
+
+                    }
+                    // key counter
+                    for (int j = 0; j < upper_alphabet.length(); j++) {
+                        if(key1[i] == upper_alphabet[j]) {
+                            counter2 = j;
+                        }
+                    }
+
+
+
+                    if(isupper(c)) {
+                        encoded[i] = upper_alphabet[(counter1+counter2)%upper_alphabet.length()];
+                    }
+                    else if(islower(c)) {
+                        encoded[i] = lower_alphabet[(counter2+counter1)%lower_alphabet.length()];
+                    }
+
+
+
+
+
+                }
+                cout << "--------------------" << endl;
+                cout << "Encoded text: " << encoded << endl;
+                cout << "shift: " << key1 << endl;
+            }
+            // Decrypt
+        }
+        else if(loop == 2) {
+            if(choice2 == 1) {
+                // Decrypt cesar cipher
+
+
+
+
+                cout <<"Please enter a shift: ";
+                cin >> key;
+
+
+
+                for(int i = 0; i < text.length(); i++) {
+                    c = text[i];
+                    if(isupper(c)) {
+                        encoded[i] = upper_alphabet[((c - 'a'-key+upper_alphabet.length())%upper_alphabet.length())] ;
+                    }
+                    else if(islower(c)) {
+
+                        encoded[i] = lower_alphabet[((c - 'a'-key+lower_alphabet.length())%lower_alphabet.length())] ;
+                    }
+                }
+
+                cout << "--------------------" << endl;
+                cout << "Encoded text: " << encoded << endl;
+                cout << "shift: " << key << endl;
+            }
+
+
+            // Decrypt Substitution Cipher system
+            else if(choice2 == 2) {
+
+
+
+
+
+                cout << "Please enter a shift: ";
+                cin >> key;
+
+                for(int i = 0; i < map.length(); i++) {
+                    map1[i] = map[(map[i] + key) % map.length()];
+                }
+
+
+                for(int i = 0; i < text.length(); i++) {
+                    for(int j = 0; j < map1.length(); j++) {
+                        if(map1[j] == text[i]) {
+                            encoded[i] = map[j];
+
+
+                        }
+
+
+                    }
+                }
+                cout << "--------------------" << endl;
+                cout << "Decrypted text: " << encoded << endl;
+                cout << "shift: " << key << endl;
+            }
+            // Decrypt VigenÃ¨re  Cipher
+            else if (choice2 == 3) {
+
+
+                cout <<"Please enter a shift: ";
+                cin >> key1;
+
+
+
+
+                for (int i = 0; i < text.length(); i++) {
+                    c = text[i];
+
+
+
+
+                    // key counter
+                    for (int j = 0; j < upper_alphabet.length(); j++) {
+                        if(key1[i] == upper_alphabet[j]) {
+                            counter2 = j;
+                        }
+                    }
+
+                    if(isupper(c)){
+                        for (int j = 0; j < upper_alphabet.length(); j++) {
+                            if(text[i] == upper_alphabet[j]) {
+                                counter1 = j;
+
+                            }
+                        }
+                    }
+                    else if(islower(c)) {
+                        for (int j = 0; j < lower_alphabet.length(); j++) {
+                            if(text[i] == lower_alphabet[j]) {
+                                counter1 = j;
+
+                            }
+                        }
+
+
+                    }
+
+                    // decrypting
+                    if(isupper(c)) {
+                        encoded[i] = upper_alphabet[(counter1-counter2+upper_alphabet.length())%upper_alphabet.length()];
+                    }
+                    else if(islower(c)) {
+                        encoded[i] = lower_alphabet[(counter1 - counter2 +lower_alphabet.length())%lower_alphabet.length()];
+                    }
+                }
+                cout << "--------------------" << endl;
+                cout << "Decrypted text: " << encoded << endl;
+                cout << "shift: " << key1 << endl;
+
+
+
+            }
+
+
+
+
+        }
+    }
+}
